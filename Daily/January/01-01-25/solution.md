@@ -5,14 +5,18 @@ Given a string s of zeros and ones, return the maximum score after splitting the
 The score after splitting a string is the number of zeros in the left substring plus the number of ones in the right substring.
 
 Input: s = "011101"
+
 Output: 5 
+
 Explanation: 
+
 All possible ways of splitting s into two non-empty substrings are:
-left = "0" and right = "11101", score = 1 + 4 = 5 
-left = "01" and right = "1101", score = 1 + 3 = 4 
-left = "011" and right = "101", score = 1 + 2 = 3 
-left = "0111" and right = "01", score = 1 + 1 = 2 
-left = "01110" and right = "1", score = 2 + 1 = 3
+
+1. left = "0" and right = "11101", score = 1 + 4 = 5 
+2. left = "01" and right = "1101", score = 1 + 3 = 4 
+3. left = "011" and right = "101", score = 1 + 2 = 3 
+4. left = "0111" and right = "01", score = 1 + 1 = 2 
+5. left = "01110" and right = "1", score = 2 + 1 = 3
 
 ## SOLUTION:
 
@@ -52,9 +56,38 @@ This handles the cases where the score is calculated for the furthest left and f
 3. reverse iterators
 4. prefix sum arrays
 
-### Sources:
+## The better solution:
 
-https://en.wikipedia.org/wiki/Prefix_sum
-https://www.geeksforgeeks.org/5-different-methods-to-find-length-of-a-string-in-cpp/
-https://www.geeksforgeeks.org/list-push_front-function-in-c-stl/
-https://stackoverflow.com/questions/15524475/deque-how-come-reserve-doesnt-exist
+```cpp
+class Solution {
+public:
+    int maxScore(string s) {
+        int ones = count(s.begin(), s.end(), '1');
+        
+        int ans = 0;
+        int zeros = 0;
+        for (int i = 0; i < s.size() - 1; i++) {
+            if (s[i] == '1') {
+                ones--;
+            } else {
+                zeros++;
+            }
+            
+            ans = max(ans, zeros + ones);
+        }
+        
+        return ans;
+    }
+};
+```
+
+See how instead of spending time calculating the entire prefix sum in the weird right to left traversal method I used, it just calculates the total cumulative sum, and subtracts ones as it needs to? Very clever.
+
+Also pay heed to the max function used, much more readable than my if condition. Further, the count function seems more useful than the for loop I used.
+
+## Sources:
+
+1. https://en.wikipedia.org/wiki/Prefix_sum
+2. https://www.geeksforgeeks.org/5-different-methods-to-find-length-of-a-string-in-cpp/
+3. https://www.geeksforgeeks.org/list-push_front-function-in-c-stl/
+4. https://stackoverflow.com/questions/15524475/deque-how-come-reserve-doesnt-exist
